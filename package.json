@@ -18,7 +18,7 @@
     "node": ">=24"
   },
   "scripts": {
-    "build": "node scripts/build-bin.mjs",
+    "build": "vite build",
     "typecheck": "tsc -p tsconfig.json",
     "test": "vitest run",
     "checks": "npm run typecheck && npm run build && npm test",
