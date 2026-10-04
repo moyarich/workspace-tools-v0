@@ -1,7 +1,7 @@
 {
   "name": "@moyarich/workspace-tools",
   "version": "0.1.0",
-  "description": "Reusable workspace release and publishing tools.",
+  "description": "Workspace CLI tools for package discovery, release preparation, versioning, publishing, dependency checks, and lockfile maintenance.",
   "type": "module",
   "bin": {
     "workspace-release": "./dist/bin/workspace-release.mjs",
@@ -22,8 +22,10 @@
   },
   "scripts": {
     "build": "node scripts/build-bin.mjs",
+    "typecheck": "tsc -p tsconfig.json",
     "test": "vitest run",
-    "typecheck": "tsc -p tsconfig.json"
+    "checks": "npm run typecheck && npm run test && npm run build",
+    "prepack": "npm run build"
   },
   "dependencies": {
     "@inquirer/prompts": "^8.7.2",
@@ -44,5 +46,9 @@
     "vite": "^8.3.1",
     "vitest": "^5.0.2"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "homepage": "https://github.com/moyarich/workspace-tools",
+  "bugs": {
+    "url": "https://github.com/moyarich/workspace-tools/issues"
+  }
 }
