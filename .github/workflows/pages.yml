@@ -37,7 +37,7 @@ jobs:
 
       - name: Configure Pages
         id: pages
-        uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5
+        uses: actions/configure-pages@v6
 
       - name: Install dependencies
         run: npm ci --no-audit --no-fund
@@ -48,7 +48,7 @@ jobs:
         run: npm run build:playground
 
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v4
+        uses: actions/upload-pages-artifact@v5
         with:
           path: apps/playground/dist
 
@@ -63,4 +63,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@decdde0ac072f6dd0f44c3e899c2b2b83e2f1312 # v4
+        uses: actions/deploy-pages@v5
