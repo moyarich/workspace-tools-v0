@@ -1,0 +1,62 @@
+---
+title: Local Development
+description: Build and run workspace-tools locally.
+---
+
+# Local development
+
+Install dependencies from the repository root:
+
+```sh
+npm ci
+```
+
+Build all CLI entry points with Vite:
+
+```sh
+npm run build
+```
+
+The publishable package lives at `packages/workspace-tools`. Its Vite config reads `package.json#bin` and writes executable release artifacts under `packages/workspace-tools/dist/`:
+
+```text
+packages/workspace-tools/dist/bin/
+├── discover-packages.mjs
+├── workspace-dependency-check.mjs
+├── workspace-package-lock.mjs
+├── workspace-publish.mjs
+├── workspace-release-identity.mjs
+└── workspace-release.mjs
+```
+
+Run a built command directly with Node:
+
+```sh
+node packages/workspace-tools/dist/bin/discover-packages.mjs --help
+```
+
+## CLI usage examples
+
+The repository includes executable usage examples under `docs/examples/10-cli-usage/`.
+
+```sh
+npm run docs:cli
+```
+
+The example invokes the Vite-built CLI against tracked fixture packages and prints the actual terminal output. To refresh its committed output snapshots:
+
+```sh
+npm run docs:cli:capture
+```
+
+This keeps examples tied to executable behavior instead of hand-maintained sample output.
+
+## Playground
+
+Run the documentation playground:
+
+```sh
+npm run dev
+```
+
+`apps/playground` renders `docs/**/*` with React and MDX, and provides Monaco-backed interactive examples. Documentation content remains outside the app.

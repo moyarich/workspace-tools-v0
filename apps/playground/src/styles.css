@@ -1,0 +1,174 @@
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  color: #171717;
+  background: #f7f7f8;
+}
+
+body {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+}
+
+code,
+pre {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+}
+
+.app-shell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+}
+
+.sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: auto;
+  padding: 24px 16px;
+  border-right: 1px solid #e5e5e7;
+  background: #fff;
+}
+
+.sidebar-brand {
+  display: grid;
+  gap: 4px;
+  margin-bottom: 24px;
+}
+
+.sidebar-brand span {
+  color: #737373;
+  font-size: 13px;
+}
+
+.sidebar nav {
+  display: grid;
+  gap: 4px;
+}
+
+.sidebar nav a {
+  padding: 8px 10px;
+  border-radius: 7px;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.sidebar nav a[aria-current="page"] {
+  background: #f0f0f2;
+  font-weight: 600;
+}
+
+.main-content {
+  min-width: 0;
+  padding: 40px;
+}
+
+.doc-page,
+.workspace-playground {
+  max-width: 1080px;
+  margin: 0 auto 40px;
+  padding: 32px;
+  background: #fff;
+  border: 1px solid #e5e5e7;
+  border-radius: 12px;
+}
+
+.doc-page h1 {
+  margin-top: 0;
+}
+
+.doc-page p,
+.doc-page li {
+  line-height: 1.7;
+}
+
+.mdx-code,
+.command-preview pre {
+  overflow: auto;
+  padding: 16px;
+  border-radius: 8px;
+  background: #151515;
+  color: #f5f5f5;
+}
+
+.mdx-table-scroll {
+  overflow-x: auto;
+}
+
+.workspace-playground header {
+  margin-bottom: 20px;
+}
+
+.workspace-playground h2 {
+  margin: 4px 0 0;
+}
+
+.eyebrow {
+  color: #737373;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.workspace-playground-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(280px, 0.6fr);
+  gap: 20px;
+}
+
+.editor-shell {
+  overflow: hidden;
+  border-radius: 8px;
+  border: 1px solid #303030;
+}
+
+.command-preview {
+  padding: 20px;
+  border-radius: 8px;
+  background: #fafafa;
+  border: 1px solid #e5e5e7;
+}
+
+.command-preview h3 {
+  margin-top: 0;
+}
+
+.muted {
+  color: #737373;
+  font-size: 13px;
+}
+
+.error {
+  color: #b42318;
+}
+
+@media (max-width: 900px) {
+  .app-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    position: static;
+    height: auto;
+    border-right: 0;
+    border-bottom: 1px solid #e5e5e7;
+  }
+
+  .workspace-playground-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .main-content {
+    padding: 20px;
+  }
+}

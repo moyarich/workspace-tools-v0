@@ -1,0 +1,19 @@
+# Workspace commands
+
+This example runs the real `@moyarich/workspace-tools` CLI against a tracked workspace fixture and captures the terminal output.
+
+It uses tracked package manifests under `fixture/packages/*` and invokes the real built binaries from `dist/bin`.
+
+Run from the repository root:
+
+```sh
+npm run docs:cli
+```
+
+Refresh committed terminal snapshots:
+
+```sh
+npm run docs:cli:capture
+```
+
+The generated files under `output/` are documentation artifacts, not mocked command responses.

@@ -1,0 +1,59 @@
+{
+  "name": "@moyarich/workspace-tools",
+  "version": "0.1.0",
+  "description": "Workspace CLI tools for package discovery, release preparation, versioning, publishing, dependency checks, and lockfile maintenance.",
+  "type": "module",
+  "bin": {
+    "workspace-release": "./dist/bin/workspace-release.mjs",
+    "workspace-publish": "./dist/bin/workspace-publish.mjs",
+    "workspace-dependency-check": "./dist/bin/workspace-dependency-check.mjs",
+    "workspace-package-lock": "./dist/bin/workspace-package-lock.mjs",
+    "discover-packages": "./dist/bin/discover-packages.mjs",
+    "workspace-release-identity": "./dist/bin/workspace-release-identity.mjs"
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "build": "vite build",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "checks": "npm run typecheck && npm run build && npm test",
+    "prepack": "npm run build"
+  },
+  "dependencies": {
+    "@inquirer/prompts": "^8.7.2",
+    "chalk": "^6.0.1",
+    "commander": "^15.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/moyarich/workspace-tools.git",
+    "directory": "packages/workspace-tools"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com",
+    "access": "public"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.3",
+    "typescript": "^6.0.3",
+    "vite": "^8.3.1",
+    "vitest": "^5.0.2"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/moyarich/workspace-tools",
+  "bugs": {
+    "url": "https://github.com/moyarich/workspace-tools/issues"
+  },
+  "keywords": [
+    "workspace",
+    "monorepo",
+    "release",
+    "publish",
+    "cli"
+  ]
+}

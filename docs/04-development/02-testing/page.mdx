@@ -1,0 +1,44 @@
+---
+title: Testing
+description: Run unit, CLI, packaging, and example checks.
+---
+
+# Testing
+
+Run the complete package check:
+
+```sh
+npm run checks
+```
+
+That executes:
+
+```text
+TypeScript typecheck
+→ Vite CLI build
+→ Vitest suite
+```
+
+The test suite covers workspace discovery, dependency checking, package-lock behavior, release identity, release planning, publishing, and built CLI behavior.
+
+## Package contents
+
+Verify the exact files that would be published:
+
+```sh
+npm pack --workspace @moyarich/workspace-tools --dry-run
+```
+
+The `prepack` lifecycle runs `vite build` before packing. A packaging contract test verifies every `package.json#bin` target resolves inside `dist/*` and exists after the build.
+
+## Executable examples
+
+Run the real usage fixture:
+
+```sh
+npm run docs:cli
+```
+
+CI runs the executable docs example in addition to the unit/integration test suite, so CLI output and command behavior stay aligned with the published documentation.
+
+The root `npm run checks` also typechecks and builds `apps/playground`.

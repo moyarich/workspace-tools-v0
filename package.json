@@ -1,0 +1,30 @@
+{
+  "name": "moyarich-workspace-tools-workspace",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspace @moyarich/workspace-tools",
+    "test": "npm test --workspace @moyarich/workspace-tools",
+    "typecheck": "npm run typecheck --workspace @moyarich/workspace-tools",
+    "checks:package": "npm run checks --workspace @moyarich/workspace-tools",
+    "dev": "npm run dev --workspace @workspace-tools/playground",
+    "build:playground": "npm run build --workspace @workspace-tools/playground",
+    "typecheck:playground": "npm run typecheck --workspace @workspace-tools/playground",
+    "checks": "npm run checks:package && npm run typecheck:playground && npm run build:playground",
+    "docs:cli": "npm run build --workspace @moyarich/workspace-tools && node docs/examples/10-cli-usage/01-workspace-commands/example.mjs",
+    "docs:cli:capture": "npm run build --workspace @moyarich/workspace-tools && node docs/examples/10-cli-usage/01-workspace-commands/example.mjs --capture"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/moyarich/workspace-tools.git"
+  }
+}

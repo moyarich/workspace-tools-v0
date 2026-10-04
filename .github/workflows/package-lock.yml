@@ -1,0 +1,62 @@
+name: Package Lock
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - package.json
+      - package-lock.json
+      - "packages/*/package.json"
+      - "apps/*/package.json"
+
+permissions:
+  contents: write
+  packages: read
+
+jobs:
+  self-heal:
+    name: Self-heal package-lock.json
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.ref || github.ref_name }}
+          persist-credentials: true
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+          registry-url: https://npm.pkg.github.com
+          scope: "@moyarich"
+
+      - name: Recreate package-lock.json
+        id: lock
+        env:
+          NODE_AUTH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --package-lock-only --ignore-scripts --no-audit --no-fund
+
+          if git status --porcelain -- package-lock.json | grep -q .; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Validate package-lock.json
+        env:
+          NODE_AUTH_TOKEN: ${{ github.token }}
+        run: npm ci --ignore-scripts --no-audit --no-fund
+
+      - name: Commit repaired lockfile
+        if: ${{ steps.lock.outputs.changed == 'true' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add package-lock.json
+          git commit -m "chore: self-heal package-lock.json"
+          git push origin "HEAD:${{ github.ref_name }}"

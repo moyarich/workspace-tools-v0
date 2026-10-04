@@ -1,0 +1,264 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Exact package version to release
+        required: true
+        default: "0.1.0"
+        type: string
+      dry-run:
+        description: Validate the release without creating tags, packages, or releases
+        required: true
+        default: true
+        type: boolean
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  release:
+    name: Release @moyarich/workspace-tools
+    runs-on: ubuntu-latest
+    environment: release
+
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: true
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+          cache: npm
+          registry-url: https://npm.pkg.github.com
+          scope: "@moyarich"
+
+      - name: Validate release version
+        id: version
+        env:
+          REQUESTED_VERSION: ${{ inputs.version }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          PACKAGE_VERSION="$(node -p "require('./packages/workspace-tools/package.json').version")"
+          if [ "$REQUESTED_VERSION" != "$PACKAGE_VERSION" ]; then
+            echo "::error::Requested version $REQUESTED_VERSION does not match package.json version $PACKAGE_VERSION."
+            exit 1
+          fi
+
+          TAG="v$PACKAGE_VERSION"
+          RELEASE_NAME="@moyarich/workspace-tools v$PACKAGE_VERSION"
+
+          echo "version=$PACKAGE_VERSION" >> "$GITHUB_OUTPUT"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "release-name=$RELEASE_NAME" >> "$GITHUB_OUTPUT"
+
+          if git rev-parse --verify --quiet "refs/tags/$TAG" >/dev/null; then
+            TAG_SHA="$(git rev-list -n 1 "$TAG")"
+            HEAD_SHA="$(git rev-parse HEAD)"
+            if [ "$TAG_SHA" != "$HEAD_SHA" ]; then
+              echo "::error::$TAG already exists on $TAG_SHA, not HEAD $HEAD_SHA."
+              exit 1
+            fi
+            echo "tag-exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "tag-exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Install dependencies
+        env:
+          NODE_AUTH_TOKEN: ${{ github.token }}
+        run: npm ci --no-audit --no-fund
+
+      - name: Run checks
+        run: npm run checks --workspace @moyarich/workspace-tools
+
+      - name: Verify package contents
+        run: npm pack --workspace @moyarich/workspace-tools --dry-run
+
+      - name: Check GitHub Packages state
+        id: registry
+        env:
+          NODE_AUTH_TOKEN: ${{ github.token }}
+          PACKAGE_VERSION: ${{ steps.version.outputs.version }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if npm view "@moyarich/workspace-tools@$PACKAGE_VERSION" version             --registry=https://npm.pkg.github.com >/tmp/published-version.txt 2>/dev/null; then
+            echo "published=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "published=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Resolve existing release
+        id: existing-release
+        env:
+          TAG: ${{ steps.version.outputs.tag }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          RELEASE="$(
+            gh api --paginate --slurp "repos/$GH_REPO/releases?per_page=100"               | jq -c --arg tag "$TAG" '[.[][] | select(.tag_name == $tag)] | first // empty'
+          )"
+
+          if [ -z "$RELEASE" ]; then
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "exists=true" >> "$GITHUB_OUTPUT"
+          echo "id=$(jq -r '.id' <<< "$RELEASE")" >> "$GITHUB_OUTPUT"
+          echo "draft=$(jq -r '.draft' <<< "$RELEASE")" >> "$GITHUB_OUTPUT"
+          echo "url=$(jq -r '.html_url' <<< "$RELEASE")" >> "$GITHUB_OUTPUT"
+
+          if [ "$(jq -r '.draft' <<< "$RELEASE")" != "true" ]; then
+            echo "::error::A published GitHub Release already exists for $TAG."
+            exit 1
+          fi
+
+      - name: Release preview
+        if: ${{ inputs.dry-run }}
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+          TAG: ${{ steps.version.outputs.tag }}
+          RELEASE_NAME: ${{ steps.version.outputs.release-name }}
+        shell: bash
+        run: |
+          {
+            echo "## Release preview"
+            echo
+            echo "| Setting | Value |"
+            echo "| --- | --- |"
+            echo "| Package | `@moyarich/workspace-tools` |"
+            echo "| Version | `$VERSION` |"
+            echo "| Git tag | `$TAG` |"
+            echo "| Release name | `$RELEASE_NAME` |"
+            echo "| Existing draft | **${{ steps.existing-release.outputs.exists }}** |"
+            echo "| Tag already exists | **${{ steps.version.outputs.tag-exists }}** |"
+            echo "| Package already published | **${{ steps.registry.outputs.published }}** |"
+            echo "| Registry | `https://npm.pkg.github.com` |"
+            echo
+            echo "Dry run made no release mutations."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Create or update GitHub Release draft
+        id: draft
+        if: ${{ !inputs.dry-run }}
+        env:
+          TAG: ${{ steps.version.outputs.tag }}
+          RELEASE_NAME: ${{ steps.version.outputs.release-name }}
+          VERSION: ${{ steps.version.outputs.version }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          NOTES="$(
+            awk '
+              $0 == "## " ENVIRON["VERSION"] { capture=1; next }
+              capture && /^## / { exit }
+              capture { print }
+            ' CHANGELOG.md
+          )"
+
+          BODY="$(
+            {
+              echo "## Release notes"
+              echo
+              if [ -n "$NOTES" ]; then
+                echo "$NOTES"
+              else
+                echo "- Initial release."
+              fi
+              echo
+              echo "## Install"
+              echo
+              echo '~~~sh'
+              echo "npm install @moyarich/workspace-tools@$VERSION --registry=https://npm.pkg.github.com"
+              echo '~~~'
+            }
+          )"
+
+          if [ "${{ steps.existing-release.outputs.exists }}" = "true" ]; then
+            RELEASE="$(
+              gh api                 --method PATCH                 "repos/$GH_REPO/releases/${{ steps.existing-release.outputs.id }}"                 -f tag_name="$TAG"                 -f target_commitish="main"                 -f name="$RELEASE_NAME"                 -f body="$BODY"                 -F draft=true
+            )"
+            ACTION="updated"
+          else
+            RELEASE="$(
+              gh api                 --method POST                 "repos/$GH_REPO/releases"                 -f tag_name="$TAG"                 -f target_commitish="main"                 -f name="$RELEASE_NAME"                 -f body="$BODY"                 -F draft=true
+            )"
+            ACTION="created"
+          fi
+
+          echo "id=$(jq -r '.id' <<< "$RELEASE")" >> "$GITHUB_OUTPUT"
+          echo "url=$(jq -r '.html_url' <<< "$RELEASE")" >> "$GITHUB_OUTPUT"
+          echo "action=$ACTION" >> "$GITHUB_OUTPUT"
+
+      - name: Create and push Git tag
+        if: ${{ !inputs.dry-run && steps.version.outputs.tag-exists == 'false' }}
+        env:
+          TAG: ${{ steps.version.outputs.tag }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git tag -a "$TAG" -m "@moyarich/workspace-tools $TAG"
+          git push origin "$TAG"
+
+      - name: Publish package
+        id: publish
+        if: ${{ !inputs.dry-run && steps.registry.outputs.published == 'false' }}
+        env:
+          NODE_AUTH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm publish --workspace @moyarich/workspace-tools --registry=https://npm.pkg.github.com
+          echo "status=published" >> "$GITHUB_OUTPUT"
+
+      - name: Publish GitHub Release
+        if: ${{ !inputs.dry-run && (steps.publish.outputs.status == 'published' || steps.registry.outputs.published == 'true') }}
+        env:
+          RELEASE_ID: ${{ steps.draft.outputs.id || steps.existing-release.outputs.id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          RELEASE="$(
+            gh api               --method PATCH               "repos/$GH_REPO/releases/$RELEASE_ID"               -F draft=false
+          )"
+
+          if [ "$(jq -r '.draft' <<< "$RELEASE")" != "false" ]; then
+            echo "::error::GitHub Release remained in draft state."
+            exit 1
+          fi
+
+          echo "Published GitHub Release: $(jq -r '.html_url' <<< "$RELEASE")"
+
+      - name: Release summary
+        if: ${{ always() }}
+        shell: bash
+        run: |
+          {
+            echo "## Workspace Tools release"
+            echo
+            echo "| Setting | Value |"
+            echo "| --- | --- |"
+            echo "| Version | `${{ steps.version.outputs.version || 'unresolved' }}` |"
+            echo "| Tag | `${{ steps.version.outputs.tag || 'unresolved' }}` |"
+            echo "| Dry run | **${{ inputs.dry-run }}** |"
+            echo "| Draft action | **${{ steps.draft.outputs.action || 'none' }}** |"
+            echo "| Package pre-existing | **${{ steps.registry.outputs.published || 'unknown' }}** |"
+            echo "| Result | **${{ job.status }}** |"
+          } >> "$GITHUB_STEP_SUMMARY"
