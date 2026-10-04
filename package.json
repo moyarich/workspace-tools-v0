@@ -12,10 +12,7 @@
     "workspace-release-identity": "./dist/bin/workspace-release-identity.mjs"
   },
   "files": [
-    "dist",
-    "README.md",
-    "CHANGELOG.md",
-    "docs"
+    "dist"
   ],
   "engines": {
     "node": ">=24"
