@@ -6,6 +6,8 @@ on:
     paths:
       - package.json
       - package-lock.json
+      - "packages/*/package.json"
+      - "apps/*/package.json"
 
 permissions:
   contents: write
