@@ -1,0 +1,52 @@
+---
+title: Local Development
+description: Build and run workspace-tools locally.
+---
+
+# Local development
+
+Install dependencies from the repository root:
+
+```sh
+npm ci
+```
+
+Build all CLI entry points:
+
+```sh
+npm run build
+```
+
+The executables are written to `dist/bin/`:
+
+```text
+dist/bin/
+├── discover-packages.mjs
+├── workspace-dependency-check.mjs
+├── workspace-package-lock.mjs
+├── workspace-publish.mjs
+├── workspace-release-identity.mjs
+└── workspace-release.mjs
+```
+
+Run a built command directly with Node:
+
+```sh
+node dist/bin/discover-packages.mjs --help
+```
+
+## CLI usage app
+
+The repository includes a real usage fixture under `apps/cli-usage`.
+
+```sh
+npm run example:cli
+```
+
+The app invokes the built CLI against tracked fixture packages and prints the actual terminal output. To refresh its committed output snapshots:
+
+```sh
+npm run example:cli:capture
+```
+
+This keeps examples tied to executable behavior instead of hand-maintained sample output.
