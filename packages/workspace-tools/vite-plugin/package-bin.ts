@@ -89,6 +89,7 @@ export async function createPackageBinPlugin(
 
   const plugin: Plugin = {
     name: "workspace-tools:package-bin",
+    apply: "build",
     enforce: "pre",
 
     async buildStart() {
