@@ -64,24 +64,19 @@ Use `--ls` to print the resolved publish plan without validating or publishing. 
 
 GitHub Packages uses `_GITHUB_TOKEN`. npm publishing uses `_NPM_TOKEN`.
 
-## Build
+## Development
 
-The package owns its executable build process:
+Development and testing documentation lives under [docs/04-development](./docs/04-development/page.mdx).
 
-```sh
-npm run build
-```
-
-The publishable package lives under `packages/workspace-tools`. Its package-local `vite.config.ts` reads `package.json#bin`, builds every declared CLI entry into `dist/*`, adds the Node.js shebang, and marks each executable as runnable.
-
-Only `packages/workspace-tools/dist/*` is part of the package release surface. The package owns its build, test, release, and publishing implementation and does not require any other `moyarich/*` repository or package.
+The publishable package is `packages/workspace-tools`; `apps/playground` renders the repository's MDX documentation and examples for local development and GitHub Pages.
 
 ## Examples
 
-Executable examples live under `apps/*`.
+Executable CLI examples live under `docs/examples/*`, alongside their MDX pages and captured terminal output.
 
 ```sh
-npm run example:cli
+npm run docs:cli
+npm run docs:cli:capture
 ```
 
-The CLI usage app creates a temporary workspace fixture, invokes the built commands, and prints the actual terminal output. Use `npm run example:cli:capture` to refresh the committed example output.
+The playground discovers and renders `docs/**/page.mdx`; documentation content stays outside the app.
