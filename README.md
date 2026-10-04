@@ -79,3 +79,13 @@ npm run build
 Its package-local `scripts/build-bin.mjs` uses Vite directly to build the `package.json#bin` entries into `dist/bin/*.mjs`, adds the Node.js shebang, and marks each executable as runnable.
 
 The package owns its build implementation. External workflows may invoke `npm run build`, but the package does not depend on `moyarich/actions` to build, test, or release itself.
+
+## Examples
+
+Executable examples live under `apps/*`.
+
+```sh
+npm run example:cli
+```
+
+The CLI usage app creates a temporary workspace fixture, invokes the built commands, and prints the actual terminal output. Use `npm run example:cli:capture` to refresh the committed example output.
