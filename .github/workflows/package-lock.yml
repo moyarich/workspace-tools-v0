@@ -1,0 +1,19 @@
+name: Package Lock
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - package.json
+      - package-lock.json
+
+permissions:
+  contents: write
+  packages: read
+
+jobs:
+  self-heal:
+    uses: moyarich/actions/.github/workflows/reusable_npm-package-lock.yml@d3a43abb5bfa653e74be3a11ded33f23e154bfed
+    with:
+      commit: true
+      node-version: "24"
