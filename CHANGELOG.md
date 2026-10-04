@@ -4,29 +4,13 @@
 
 ### Added
 
-- Workspace package discovery with reusable metadata for GitHub Actions.
-- `workspace-release` with bump, exact-version, package-json, dry-run, JSON, and interactive selection modes.
-- `workspace-release-identity` for canonical package-directory Git tags and GitHub Release names shared by drafting, releasing, and publishing.
-- `workspace-publish` with registry selection, dependency ordering, dry-run plans, JSON output, and interactive confirmation.
-- Dependency checks and safe workspace-selector validation before release or publish operations.
-- Registry-state checks that distinguish unpublished packages from registry failures.
-- Git-tag verification and conflict guardrails for releases and publishing.
-- Release identity metadata in release and publish JSON for workflow orchestration.
-- Package-scoped changelog generation from commit history.
-- `workspace-package-lock` and reusable package-discovery CLIs.
-- Package-local release, publish, and CLI documentation.
-
-### Changed
-
-- Standardize the package on Node 24, TypeScript, Commander, Vitest, and Vite-built CLI entry points.
-- Build executables into `dist/bin` and use `dist/` as the package runtime boundary.
-- Pack each workspace package once and publish the exact generated tarball to selected registries.
-- Support retaining packed tarballs as local artifacts and GitHub Actions artifacts.
-
-### Fixed
-
-- Keep release dry runs non-mutating and produce clean human and JSON output.
-- Resolve previous package releases and unpublished-package versions reliably.
-- Reject unsafe package selectors and prevent publishing private workspaces.
-- Preserve required subprocess diagnostics without polluting JSON results.
-- Report existing tag conflicts without moving tags.
+- Discover workspace packages and return package metadata for scripts and CI automation.
+- Check workspace dependency relationships before release and publishing operations.
+- Inspect and maintain workspace package-lock state.
+- Preview or create package releases with semantic-version bumps, exact versions, or the version already stored in `package.json`.
+- Resolve canonical package release identities, including package-scoped Git tags and GitHub Release names.
+- Preview and publish workspace packages to GitHub Packages, npm, or both.
+- Publish internal workspace dependencies in dependency order with `--with-dependencies`.
+- Validate release tags before publishing and refuse conflicting or unsafe releases.
+- Preview release and publish operations with non-mutating dry-run and JSON output.
+- Reuse the exact packed tarball across selected registries and optionally retain it as an artifact.
