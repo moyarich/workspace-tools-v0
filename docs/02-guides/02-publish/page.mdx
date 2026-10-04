@@ -15,7 +15,7 @@ workspace-publish --dry-run
 workspace-publish --dry-run --json
 ```
 
-The reusable publish workflow also exposes a `dry-run` boolean input and defaults it to `true` for safer manual and reusable runs.
+Reusable workflows may expose their own dry-run controls, but the CLI itself remains the source of truth for publish validation.
 
 Publish to GitHub Packages:
 
@@ -43,8 +43,22 @@ Use `--registry=both` for both destinations. `--tag=<tag>` controls the npm dist
 
 Before publishing a missing registry version, the tool runs each package's `typecheck`, `test`, and `build` scripts when present, followed by `npm pack --dry-run`.
 
-## GitHub Release finalization
 
-The reusable publish workflow resolves the same canonical release identity used by the release drafter and release workflow. Before a real publish it verifies that the matching GitHub draft exists and has the expected release name.
 
-After package publication succeeds, the workflow publishes that existing GitHub Release draft. If npm publication is only staged or the canonical Git tag is absent, the GitHub Release stays in draft state.
+## Publishing workspace-tools itself
+
+This repository publishes `@moyarich/workspace-tools` to GitHub Packages.
+
+The repository-local release workflow performs:
+
+```text
+typecheck
+→ tests
+→ build
+→ npm pack --dry-run
+→ create v<version> Git tag
+→ publish package to GitHub Packages
+→ publish matching GitHub Release
+```
+
+The initial bootstrap release intentionally does not call `moyarich/actions`, because the reusable workflow API depends on this package.
