@@ -1,66 +1,30 @@
 {
-  "name": "@moyarich/workspace-tools",
-  "version": "0.1.0",
-  "description": "Workspace CLI tools for package discovery, release preparation, versioning, publishing, dependency checks, and lockfile maintenance.",
+  "name": "moyarich-workspace-tools-workspace",
+  "private": true,
+  "version": "0.0.0",
   "type": "module",
-  "bin": {
-    "workspace-release": "./dist/bin/workspace-release.mjs",
-    "workspace-publish": "./dist/bin/workspace-publish.mjs",
-    "workspace-dependency-check": "./dist/bin/workspace-dependency-check.mjs",
-    "workspace-package-lock": "./dist/bin/workspace-package-lock.mjs",
-    "discover-packages": "./dist/bin/discover-packages.mjs",
-    "workspace-release-identity": "./dist/bin/workspace-release-identity.mjs"
-  },
-  "files": [
-    "dist"
+  "workspaces": [
+    "packages/*",
+    "apps/*"
   ],
+  "scripts": {
+    "build": "npm run build --workspace @moyarich/workspace-tools",
+    "test": "npm test --workspace @moyarich/workspace-tools",
+    "typecheck": "npm run typecheck --workspace @moyarich/workspace-tools",
+    "checks:package": "npm run checks --workspace @moyarich/workspace-tools",
+    "dev": "npm run dev --workspace @workspace-tools/playground",
+    "build:playground": "npm run build --workspace @workspace-tools/playground",
+    "typecheck:playground": "npm run typecheck --workspace @workspace-tools/playground",
+    "checks": "npm run checks:package && npm run typecheck:playground && npm run build:playground",
+    "example:cli": "npm run build --workspace @moyarich/workspace-tools && node apps/cli-usage/run.mjs",
+    "example:cli:capture": "npm run build --workspace @moyarich/workspace-tools && node apps/cli-usage/run.mjs --capture"
+  },
   "engines": {
     "node": ">=24"
   },
-  "scripts": {
-    "build": "vite build",
-    "typecheck": "tsc -p tsconfig.json",
-    "test": "vitest run",
-    "checks": "npm run typecheck && npm run build && npm test",
-    "prepack": "npm run build",
-    "example:cli": "npm run build && node apps/cli-usage/run.mjs",
-    "example:cli:capture": "npm run build && node apps/cli-usage/run.mjs --capture",
-    "dev:playground": "npm run dev --workspace @workspace-tools/playground",
-    "build:playground": "npm run build --workspace @workspace-tools/playground",
-    "typecheck:playground": "npm run typecheck --workspace @workspace-tools/playground"
-  },
-  "dependencies": {
-    "@inquirer/prompts": "^8.7.2",
-    "chalk": "^6.0.1",
-    "commander": "^15.0.0"
-  },
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/moyarich/workspace-tools.git"
-  },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com",
-    "access": "public"
-  },
-  "devDependencies": {
-    "@types/node": "^26.6.3",
-    "typescript": "^6.0.3",
-    "vite": "^8.3.1",
-    "vitest": "^5.0.2"
-  },
-  "license": "MIT",
-  "homepage": "https://github.com/moyarich/workspace-tools",
-  "bugs": {
-    "url": "https://github.com/moyarich/workspace-tools/issues"
-  },
-  "keywords": [
-    "workspace",
-    "monorepo",
-    "release",
-    "publish",
-    "cli"
-  ],
-  "workspaces": [
-    "apps/*"
-  ]
+  }
 }
