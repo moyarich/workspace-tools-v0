@@ -36,7 +36,9 @@ The `prepack` lifecycle runs `vite build` before packing. A packaging contract t
 Run the real usage fixture:
 
 ```sh
-npm run example:cli
+npm run docs:cli
 ```
 
-CI runs this example in addition to the unit/integration test suite, so changes to CLI output or command behavior are exercised before release.
+CI runs the executable docs example in addition to the unit/integration test suite, so CLI output and command behavior stay aligned with the published documentation.
+
+The root `npm run checks` also typechecks and builds `apps/playground`.
