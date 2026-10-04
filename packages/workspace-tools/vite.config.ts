@@ -3,7 +3,7 @@ import { fileURLToPath } from "node:url";
 
 import { defineConfig } from "vite";
 
-import { createPackageBinPlugin } from "./vite-plugin/package-bin";
+import { createPackageBinPlugin } from "./vite-plugin/package-bin.ts";
 
 const packageRoot = path.dirname(fileURLToPath(import.meta.url));
 const { plugin, bins } = await createPackageBinPlugin({
