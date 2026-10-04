@@ -15,7 +15,7 @@ That executes:
 
 ```text
 TypeScript typecheck
-→ CLI build
+→ Vite CLI build
 → Vitest suite
 ```
 
@@ -29,7 +29,7 @@ Verify the exact files that would be published:
 npm pack --dry-run
 ```
 
-The `prepack` lifecycle rebuilds the CLI before packing.
+The `prepack` lifecycle runs `vite build` before packing. A packaging contract test verifies every `package.json#bin` target resolves inside `dist/*` and exists after the build.
 
 ## Executable examples
 
