@@ -72,9 +72,9 @@ The package owns its executable build process:
 npm run build
 ```
 
-Its package-local `scripts/build-bin.mjs` uses Vite directly to build the `package.json#bin` entries into `dist/bin/*.mjs`, adds the Node.js shebang, and marks each executable as runnable.
+Its package-local `vite.config.ts` reads `package.json#bin`, builds every declared CLI entry into `dist/*`, adds the Node.js shebang, and marks each executable as runnable.
 
-The package owns its build, test, release, and publishing implementation and does not require any other `moyarich/*` repository or package.
+Only `dist/*` is part of the package release surface. The package owns its build, test, release, and publishing implementation and does not require any other `moyarich/*` repository or package.
 
 ## Examples
 
