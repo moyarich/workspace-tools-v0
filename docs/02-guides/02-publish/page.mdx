@@ -15,7 +15,7 @@ workspace-publish --dry-run
 workspace-publish --dry-run --json
 ```
 
-Reusable workflows may expose their own dry-run controls, but the CLI itself remains the source of truth for publish validation.
+Automation may wrap these commands, but the CLI remains the source of truth for publish validation.
 
 Publish to GitHub Packages:
 
@@ -61,4 +61,4 @@ typecheck
 → publish matching GitHub Release
 ```
 
-The initial bootstrap release intentionally does not call `moyarich/actions`, because the reusable workflow API depends on this package.
+The repository's release process is fully self-contained and does not depend on any other `moyarich/*` repository or package.
