@@ -48,11 +48,11 @@ GitHub Release name:    <package-name> v<version>
 For example:
 
 ```text
-Package:        @moyarich/auto-glow-md
-Directory:      packages/moyarich-auto-glow-md
+Package:        @example/package
+Directory:      packages/example-package
 Version:        0.1.0
-Git tag:        packages/moyarich-auto-glow-md@0.1.0
-Release name:   @moyarich/auto-glow-md v0.1.0
+Git tag:        packages/example-package@0.1.0
+Release name:   @example/package v0.1.0
 ```
 
 Use `workspace-release-identity` when another tool or workflow needs these values.
@@ -70,4 +70,4 @@ v0.1.0
 
 That repository tag is intentionally separate from the package-directory tag convention produced by `workspace-release` for packages inside other workspaces.
 
-The initial release is bootstrapped locally in this repository and does not depend on `moyarich/actions`.
+The repository release process is self-contained and does not depend on any other `moyarich/*` repository or package.
