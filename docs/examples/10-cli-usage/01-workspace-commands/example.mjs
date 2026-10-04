@@ -6,7 +6,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const docsRoot = path.dirname(fileURLToPath(import.meta.url));
-const repoRoot = path.resolve(docsRoot, "../..");
+const repoRoot = path.resolve(docsRoot, "../../../..");
 const packageRoot = path.join(repoRoot, "packages", "workspace-tools");
 const fixtureRoot = path.join(docsRoot, "fixture");
 const outputRoot = path.join(docsRoot, "output");
@@ -29,7 +29,7 @@ const examples = [
     name: "workspace-publish-help",
     command: path.join(packageRoot, "dist/bin/workspace-publish.mjs"),
     args: ["--help"],
-    cwd: repoRoot,
+    cwd: packageRoot,
   },
 ];
 
