@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 
 const appRoot = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(appRoot, "../..");
+const packageRoot = path.join(repoRoot, "packages", "workspace-tools");
 const fixtureRoot = path.join(appRoot, "fixture");
 const outputRoot = path.join(appRoot, "output");
 const capture = process.argv.includes("--capture");
@@ -14,19 +15,19 @@ const capture = process.argv.includes("--capture");
 const examples = [
   {
     name: "discover-packages",
-    command: path.join(repoRoot, "dist/bin/discover-packages.mjs"),
+    command: path.join(packageRoot, "dist/bin/discover-packages.mjs"),
     args: ["packages", "--include-private", "--json"],
     cwd: fixtureRoot,
   },
   {
     name: "workspace-release-help",
-    command: path.join(repoRoot, "dist/bin/workspace-release.mjs"),
+    command: path.join(packageRoot, "dist/bin/workspace-release.mjs"),
     args: ["--help"],
-    cwd: repoRoot,
+    cwd: packageRoot,
   },
   {
     name: "workspace-publish-help",
-    command: path.join(repoRoot, "dist/bin/workspace-publish.mjs"),
+    command: path.join(packageRoot, "dist/bin/workspace-publish.mjs"),
     args: ["--help"],
     cwd: repoRoot,
   },
