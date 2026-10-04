@@ -3,7 +3,7 @@ import { resolve } from "node:path";
 import { describe, expect, test } from "vitest";
 
 const packageRoot = resolve(import.meta.dirname, "..");
-const repositoryRoot = resolve(packageRoot, "../..");
+const repositoryRoot = packageRoot;
 
 function invoke(script: string, ...args: string[]) {
   const result = spawnSync(process.execPath, [script, ...args], {
@@ -20,9 +20,9 @@ function invoke(script: string, ...args: string[]) {
 }
 
 for (const command of [
-  "packages/workspace-tools/dist/bin/workspace-release.mjs",
-  "packages/workspace-tools/dist/bin/workspace-publish.mjs",
-  "packages/workspace-tools/dist/bin/discover-packages.mjs",
+  "dist/bin/workspace-release.mjs",
+  "dist/bin/workspace-publish.mjs",
+  "dist/bin/discover-packages.mjs",
 ]) {
   describe(command, () => {
     test("shows help without running its action", () => {
@@ -42,10 +42,10 @@ for (const command of [
 
 test("package discovery preserves its default directory and JSON output", () => {
   const implicit = invoke(
-    "packages/workspace-tools/dist/bin/discover-packages.mjs",
+    "dist/bin/discover-packages.mjs",
   );
   const explicit = invoke(
-    "packages/workspace-tools/dist/bin/discover-packages.mjs",
+    "dist/bin/discover-packages.mjs",
     "packages",
   );
   expect(implicit.status).toBe(0);
@@ -64,7 +64,7 @@ test("release accepts both separated and equals option values", () => {
     ["--mode", "exact", "--version", "invalid"],
   ]) {
     const result = invoke(
-      "packages/workspace-tools/dist/bin/workspace-release.mjs",
+      "dist/bin/workspace-release.mjs",
       "workspace-tools=patch",
       "--dry-run",
       ...args,
@@ -76,7 +76,7 @@ test("release accepts both separated and equals option values", () => {
 
 test("publish rejects values assigned to boolean flags", () => {
   const result = invoke(
-    "packages/workspace-tools/dist/bin/workspace-publish.mjs",
+    "dist/bin/workspace-publish.mjs",
     "--dry-run=invalid",
   );
   expect(result.status).toBe(1);
