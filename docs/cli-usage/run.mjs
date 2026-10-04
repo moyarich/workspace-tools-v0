@@ -5,11 +5,11 @@ import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-const appRoot = path.dirname(fileURLToPath(import.meta.url));
-const repoRoot = path.resolve(appRoot, "../..");
+const docsRoot = path.dirname(fileURLToPath(import.meta.url));
+const repoRoot = path.resolve(docsRoot, "../..");
 const packageRoot = path.join(repoRoot, "packages", "workspace-tools");
-const fixtureRoot = path.join(appRoot, "fixture");
-const outputRoot = path.join(appRoot, "output");
+const fixtureRoot = path.join(docsRoot, "fixture");
+const outputRoot = path.join(docsRoot, "output");
 const capture = process.argv.includes("--capture");
 
 const examples = [
