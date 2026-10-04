@@ -1,5 +1,29 @@
 # CLI reference
 
+## discover-packages
+
+```sh
+discover-packages [packages-directory] [--json] [--include-private] [--require-publish-config] [--require-test-script] [--require-build-script]
+```
+
+Discovers direct-child workspace packages and emits metadata suitable for scripts and CI matrices.
+
+## workspace-dependency-check
+
+```sh
+workspace-dependency-check [package] [--json]
+```
+
+Validates workspace package dependency relationships.
+
+## workspace-package-lock
+
+```sh
+workspace-package-lock [--json]
+```
+
+Validates or updates workspace package-lock state.
+
 ## workspace-release-identity
 
 ```sh
