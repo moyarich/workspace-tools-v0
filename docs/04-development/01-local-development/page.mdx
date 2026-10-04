@@ -35,18 +35,28 @@ Run a built command directly with Node:
 node packages/workspace-tools/dist/bin/discover-packages.mjs --help
 ```
 
-## CLI usage app
+## CLI usage examples
 
-The repository includes a real usage fixture under `apps/cli-usage`.
+The repository includes executable usage examples under `docs/examples/10-cli-usage/`.
 
 ```sh
-npm run example:cli
+npm run docs:cli
 ```
 
-The app invokes the Vite-built CLI against tracked fixture packages and prints the actual terminal output. To refresh its committed output snapshots:
+The example invokes the Vite-built CLI against tracked fixture packages and prints the actual terminal output. To refresh its committed output snapshots:
 
 ```sh
-npm run example:cli:capture
+npm run docs:cli:capture
 ```
 
 This keeps examples tied to executable behavior instead of hand-maintained sample output.
+
+## Playground
+
+Run the documentation playground:
+
+```sh
+npm run dev
+```
+
+`apps/playground` renders `docs/**/*` with React and MDX, and provides Monaco-backed interactive examples. Documentation content remains outside the app.
