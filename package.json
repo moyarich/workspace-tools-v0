@@ -25,7 +25,9 @@
     "typecheck": "tsc -p tsconfig.json",
     "test": "vitest run",
     "checks": "npm run typecheck && npm run build && npm test",
-    "prepack": "npm run build"
+    "prepack": "npm run build",
+    "example:cli": "npm run build && node apps/cli-usage/run.mjs",
+    "example:cli:capture": "npm run build && node apps/cli-usage/run.mjs --capture"
   },
   "dependencies": {
     "@inquirer/prompts": "^8.7.2",
