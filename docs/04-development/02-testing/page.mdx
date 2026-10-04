@@ -1,0 +1,42 @@
+---
+title: Testing
+description: Run unit, CLI, packaging, and example checks.
+---
+
+# Testing
+
+Run the complete package check:
+
+```sh
+npm run checks
+```
+
+That executes:
+
+```text
+TypeScript typecheck
+→ CLI build
+→ Vitest suite
+```
+
+The test suite covers workspace discovery, dependency checking, package-lock behavior, release identity, release planning, publishing, and built CLI behavior.
+
+## Package contents
+
+Verify the exact files that would be published:
+
+```sh
+npm pack --dry-run
+```
+
+The `prepack` lifecycle rebuilds the CLI before packing.
+
+## Executable examples
+
+Run the real usage fixture:
+
+```sh
+npm run example:cli
+```
+
+CI runs this example in addition to the unit/integration test suite, so changes to CLI output or command behavior are exercised before release.
