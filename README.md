@@ -1,6 +1,6 @@
 # @moyarich/workspace-tools
 
-Workspace-aware CLI tools used by reusable automation such as `moyarich/actions`, and available directly from the command line.
+Standalone workspace-aware CLI tools for package discovery, release preparation, versioning, publishing, dependency checks, and lockfile maintenance.
 
 ## Installation
 
@@ -12,20 +12,20 @@ npm install --global @moyarich/workspace-tools --registry=https://npm.pkg.github
 
 ### `discover-packages`
 
-Discover direct-child workspace packages and emit metadata used by reusable workflows.
+Discover direct-child workspace packages and emit metadata for scripts, CLIs, and CI systems.
 
 ```sh
 discover-packages [packages-directory] [--json] [--include-private] [--require-publish-config] [--require-test-script] [--require-build-script]
 ```
 
-The JSON output includes each package's directory, name, version, privacy, publishability, and build/test capabilities. GitHub Actions should consume package inventory through `.github/workflows/reusable_discover-packages.yml` rather than maintaining package lists in workflow YAML.
+The JSON output includes each package's directory, name, version, privacy, publishability, and build/test capabilities.
 
 ### `workspace-release-identity`
 
 Resolve the canonical package release identity used by draft, release, and publish workflows.
 
 ```sh
-workspace-release-identity packages/auto-glow-md --version 0.1.0 --json
+workspace-release-identity packages/example-package --version 0.1.0 --json
 ```
 
 The identity contract is:
@@ -33,7 +33,7 @@ The identity contract is:
 - Git tag: `<package-directory>@<version>`
 - GitHub Release name: `<package-name> v<version>`
 
-For example, `@moyarich/auto-glow-md@0.1.0` resolves to tag `packages/moyarich-auto-glow-md@0.1.0` and release name `@moyarich/auto-glow-md v0.1.0`.
+For example, `@example/package@0.1.0` resolves to tag `packages/moyarich-auto-glow-md@0.1.0` and release name `@example/package v0.1.0`.
 
 ### `workspace-release`
 
@@ -64,10 +64,6 @@ Use `--ls` to print the resolved publish plan without validating or publishing. 
 
 GitHub Packages uses `_GITHUB_TOKEN`. npm publishing uses `_NPM_TOKEN`.
 
-## Reusable workflows
-
-The package is the CLI implementation behind the repository's generic npm release and publish workflows. Package-specific workflows should delegate to those generic workflows rather than duplicate their release logic.
-
 ## Build
 
 The package owns its executable build process:
@@ -78,7 +74,7 @@ npm run build
 
 Its package-local `scripts/build-bin.mjs` uses Vite directly to build the `package.json#bin` entries into `dist/bin/*.mjs`, adds the Node.js shebang, and marks each executable as runnable.
 
-The package owns its build implementation. External workflows may invoke `npm run build`, but the package does not depend on `moyarich/actions` to build, test, or release itself.
+The package owns its build, test, release, and publishing implementation and does not require any other `moyarich/*` repository or package.
 
 ## Examples
 
