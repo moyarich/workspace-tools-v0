@@ -50,7 +50,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          PACKAGE_VERSION="$(node -p "require('./package.json').version")"
+          PACKAGE_VERSION="$(node -p "require('./packages/workspace-tools/package.json').version")"
           if [ "$REQUESTED_VERSION" != "$PACKAGE_VERSION" ]; then
             echo "::error::Requested version $REQUESTED_VERSION does not match package.json version $PACKAGE_VERSION."
             exit 1
@@ -81,10 +81,10 @@ jobs:
         run: npm ci --no-audit --no-fund
 
       - name: Run checks
-        run: npm run checks
+        run: npm run checks --workspace @moyarich/workspace-tools
 
       - name: Verify package contents
-        run: npm pack --dry-run
+        run: npm pack --workspace @moyarich/workspace-tools --dry-run
 
       - name: Check GitHub Packages state
         id: registry
@@ -224,7 +224,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          npm publish --registry=https://npm.pkg.github.com
+          npm publish --workspace @moyarich/workspace-tools --registry=https://npm.pkg.github.com
           echo "status=published" >> "$GITHUB_OUTPUT"
 
       - name: Publish GitHub Release
