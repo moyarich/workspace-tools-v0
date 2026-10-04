@@ -58,3 +58,16 @@ Release name:   @moyarich/auto-glow-md v0.1.0
 Use `workspace-release-identity` when another tool or workflow needs these values.
 
 A release-only workflow run creates and pushes the canonical Git tag but intentionally leaves the matching GitHub Release as a draft. Package publication promotes that same draft only after publication completes. If npm publication is staged and still awaiting completion, the GitHub Release remains a draft.
+
+
+## Releasing this repository
+
+`moyarich/workspace-tools` is now a standalone repository. Its own repository release uses a normal repository tag such as:
+
+```text
+v0.1.0
+```
+
+That repository tag is intentionally separate from the package-directory tag convention produced by `workspace-release` for packages inside other workspaces.
+
+The initial release is bootstrapped locally in this repository and does not depend on `moyarich/actions`.
