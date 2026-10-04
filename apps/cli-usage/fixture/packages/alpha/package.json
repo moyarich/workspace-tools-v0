@@ -1,0 +1,11 @@
+{
+  "name": "@example/alpha",
+  "version": "1.2.3",
+  "scripts": {
+    "test": "vitest run",
+    "build": "vite build"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  }
+}
