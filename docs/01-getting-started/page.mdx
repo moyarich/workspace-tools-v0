@@ -1,14 +1,24 @@
 # Getting started
 
-The package installs two executables:
+`@moyarich/workspace-tools` installs six executables:
 
-```sh
-workspace-release
+```text
+discover-packages
+workspace-dependency-check
+workspace-package-lock
 workspace-publish
+workspace-release
+workspace-release-identity
 ```
 
-`workspace-release` previews or creates workspace package releases. It supports version bumps, exact versions, and `package-json` mode, which releases the version already present in `package.json` without running `npm version` or manufacturing a release-only commit.
+Install from GitHub Packages:
 
-`workspace-publish` validates and publishes workspace packages. By default, a real publish verifies that the matching package release Git tag exists and points to `HEAD`.
+```sh
+npm install --global @moyarich/workspace-tools --registry=https://npm.pkg.github.com
+```
 
-Both commands operate from the repository workspace and resolve package selectors from the workspace.
+Node.js 24 or newer is required.
+
+The commands operate on the repository in the current working directory. Most commands resolve package selectors from workspace metadata, so they can be used in monorepos without hard-coded package lists.
+
+For package releases inside a workspace, see [Releasing packages](../02-guides/01-release/page.mdx). For registry publication, see [Publishing packages](../02-guides/02-publish/page.mdx).
