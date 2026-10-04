@@ -36,11 +36,8 @@ jobs:
             npm install --ignore-scripts --no-audit --no-fund
           fi
 
-      - name: Typecheck
-        run: npm run typecheck
+      - name: Run checks
+        run: npm run checks
 
-      - name: Build
-        run: npm run build
-
-      - name: Test
-        run: npm test
+      - name: Verify package contents
+        run: npm pack --dry-run
