@@ -11,13 +11,13 @@ Install dependencies from the repository root:
 npm ci
 ```
 
-Build all CLI entry points:
+Build all CLI entry points with Vite:
 
 ```sh
 npm run build
 ```
 
-The executables are written to `dist/bin/`:
+Vite reads `package.json#bin` and writes the executable release artifacts under `dist/`:
 
 ```text
 dist/bin/
@@ -43,7 +43,7 @@ The repository includes a real usage fixture under `apps/cli-usage`.
 npm run example:cli
 ```
 
-The app invokes the built CLI against tracked fixture packages and prints the actual terminal output. To refresh its committed output snapshots:
+The app invokes the Vite-built CLI against tracked fixture packages and prints the actual terminal output. To refresh its committed output snapshots:
 
 ```sh
 npm run example:cli:capture
