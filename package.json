@@ -16,8 +16,8 @@
     "build:playground": "npm run build --workspace @workspace-tools/playground",
     "typecheck:playground": "npm run typecheck --workspace @workspace-tools/playground",
     "checks": "npm run checks:package && npm run typecheck:playground && npm run build:playground",
-    "example:cli": "npm run build --workspace @moyarich/workspace-tools && node apps/cli-usage/run.mjs",
-    "example:cli:capture": "npm run build --workspace @moyarich/workspace-tools && node apps/cli-usage/run.mjs --capture"
+    "docs:cli": "npm run build --workspace @moyarich/workspace-tools && node docs/cli-usage/run.mjs",
+    "docs:cli:capture": "npm run build --workspace @moyarich/workspace-tools && node docs/cli-usage/run.mjs --capture"
   },
   "engines": {
     "node": ">=24"
