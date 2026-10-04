@@ -40,7 +40,7 @@ jobs:
         run: npm run checks
 
       - name: Run executable CLI examples
-        run: npm run example:cli
+        run: npm run docs:cli
 
       - name: Verify package contents
         run: npm pack --workspace @moyarich/workspace-tools --dry-run
