@@ -17,10 +17,10 @@ Build all CLI entry points with Vite:
 npm run build
 ```
 
-Vite reads `package.json#bin` and writes the executable release artifacts under `dist/`:
+The publishable package lives at `packages/workspace-tools`. Its Vite config reads `package.json#bin` and writes executable release artifacts under `packages/workspace-tools/dist/`:
 
 ```text
-dist/bin/
+packages/workspace-tools/dist/bin/
 ├── discover-packages.mjs
 ├── workspace-dependency-check.mjs
 ├── workspace-package-lock.mjs
@@ -32,7 +32,7 @@ dist/bin/
 Run a built command directly with Node:
 
 ```sh
-node dist/bin/discover-packages.mjs --help
+node packages/workspace-tools/dist/bin/discover-packages.mjs --help
 ```
 
 ## CLI usage app
