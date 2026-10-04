@@ -1,0 +1,32 @@
+# CLI reference
+
+## workspace-release-identity
+
+```sh
+workspace-release-identity <package> [--version=<version>] [--json|--pretty-json]
+```
+
+Returns the canonical package release identity. The Git tag is `<package-directory>@<version>`; the GitHub Release name is `<package-name> v<version>`.
+
+## workspace-release
+
+```sh
+workspace-release <package>=<version|major|minor|patch|premajor|preminor|prepatch|prerelease>
+workspace-release <package> --mode=package-json
+```
+
+Release modes are `bump`, `exact`, and `package-json`. `package-json` reads the current manifest version and tags `HEAD` without invoking `npm version`.
+
+`--dry-run` reports registry and exact Git-tag conflicts without modifying repository state.
+
+## workspace-publish
+
+```sh
+workspace-publish [package] [--registry=github|npm|both] [--tag=latest] [--access=public|restricted] [--dry-run] [--no-verify-git-tag]
+```
+
+Matching Git release tag verification defaults to enabled. A real publish requires `<package-directory>@<package.json.version>` to point to `HEAD`. Use `--no-verify-git-tag` to explicitly disable this condition.
+
+`--dry-run` never publishes to a registry. With a selector it previews that package; without a selector it previews every publishable package. JSON dry-runs return `dryRun: true`, registry states, Git-tag states, `canPublish`, and an optional `reason`.
+
+When Git-tag verification fails during `--dry-run`, the command returns `status: "warning"` rather than failing because of the tag state. The reusable publish workflow exposes the same behavior through its `dry-run` input, which defaults to `true`.

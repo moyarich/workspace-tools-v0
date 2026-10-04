@@ -1,0 +1,50 @@
+# Publishing packages
+
+Validate without publishing:
+
+```sh
+workspace-publish css-expand-collapse --dry-run
+```
+
+A dry run performs the publish checks without registry mutation. It checks registry state, verifies the matching Git release tag by default, and validates versions that would need publishing. A missing or mismatched release tag is reported as a warning instead of failing the preview. The JSON result includes `dryRun: true`, `verifyGitTag`, `gitTags`, `canPublish`, registry states, and the reason when publishing is blocked.
+
+To preview every publishable workspace package:
+
+```sh
+workspace-publish --dry-run
+workspace-publish --dry-run --json
+```
+
+The reusable publish workflow also exposes a `dry-run` boolean input and defaults it to `true` for safer manual and reusable runs.
+
+Publish to GitHub Packages:
+
+```sh
+workspace-publish css-expand-collapse --registry=github
+```
+
+Stage a release for npm:
+
+```sh
+workspace-publish css-expand-collapse --registry=npm
+```
+
+Before a real publish, Git tag verification is enabled by default. The matching `<package-directory>@<package.json.version>` tag must exist and point to `HEAD`. A missing tag or a tag on another commit fails the publish before package validation or registry mutation.
+
+To intentionally bypass this condition:
+
+```sh
+workspace-publish css-expand-collapse --no-verify-git-tag
+```
+
+If the matching tag is valid but the package version already exists in the selected registry, that destination is skipped with reason `already-published`.
+
+Use `--registry=both` for both destinations. `--tag=<tag>` controls the npm distribution tag and `--access=public|restricted` controls access.
+
+Before publishing a missing registry version, the tool runs each package's `typecheck`, `test`, and `build` scripts when present, followed by `npm pack --dry-run`.
+
+## GitHub Release finalization
+
+The reusable publish workflow resolves the same canonical release identity used by the release drafter and release workflow. Before a real publish it verifies that the matching GitHub draft exists and has the expected release name.
+
+After package publication succeeds, the workflow publishes that existing GitHub Release draft. If npm publication is only staged or the canonical Git tag is absent, the GitHub Release stays in draft state.

@@ -1,0 +1,14 @@
+# Getting started
+
+The package installs two executables:
+
+```sh
+workspace-release
+workspace-publish
+```
+
+`workspace-release` previews or creates workspace package releases. It supports version bumps, exact versions, and `package-json` mode, which releases the version already present in `package.json` without running `npm version` or manufacturing a release-only commit.
+
+`workspace-publish` validates and publishes workspace packages. By default, a real publish verifies that the matching package release Git tag exists and points to `HEAD`.
+
+Both commands operate from the repository workspace and resolve package selectors from the workspace.

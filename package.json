@@ -1,0 +1,45 @@
+{
+  "name": "@moyarich/workspace-tools",
+  "version": "0.1.0",
+  "description": "Reusable workspace release and publishing tools.",
+  "type": "module",
+  "bin": {
+    "workspace-release": "./dist/bin/workspace-release.mjs",
+    "workspace-publish": "./dist/bin/workspace-publish.mjs",
+    "workspace-dependency-check": "./dist/bin/workspace-dependency-check.mjs",
+    "workspace-package-lock": "./dist/bin/workspace-package-lock.mjs",
+    "discover-packages": "./dist/bin/discover-packages.mjs",
+    "workspace-release-identity": "./dist/bin/workspace-release-identity.mjs"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "CHANGELOG.md",
+    "docs"
+  ],
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "build": "node scripts/build-bin.mjs",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@inquirer/prompts": "^8.7.2",
+    "chalk": "^6.0.1",
+    "commander": "^15.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/moyarich/workspace-tools.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com",
+    "access": "public"
+  },
+  "devDependencies": {
+    "vite": "^8.3.1"
+  },
+  "license": "MIT"
+}

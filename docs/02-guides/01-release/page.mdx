@@ -1,0 +1,60 @@
+# Releasing packages
+
+Use a bump or exact semantic version:
+
+```sh
+workspace-release css-expand-collapse=patch
+workspace-release css-expand-collapse=minor
+workspace-release css-expand-collapse=1.0.0
+```
+
+Supported npm version increments are `major`, `minor`, `patch`, `premajor`, `preminor`, `prepatch`, and `prerelease`.
+
+To release the version already stored in the package manifest:
+
+```sh
+workspace-release css-expand-collapse --mode=package-json
+```
+
+`package-json` does not run `npm version` and does not create a release-only commit. It creates the package-scoped tag, such as `packages/css-expand-collapse@1.0.0`, at the current `HEAD`.
+
+The command requires a clean Git working tree. Bump and exact modes run `npm version` with npm Git tagging disabled, update the release files, create the release commit, and create the package-scoped Git tag.
+
+## Existing tags
+
+Release tags are immutable. A real release fails when the exact package/version tag already exists and never force-moves it.
+
+A dry run reports the conflict without mutating the repository. Its JSON includes the tag state, `canRelease`, and a reason. A tag on another commit therefore produces a warning preview with `canRelease: false` rather than moving the tag.
+
+Multiple package release tags may legitimately point to the same commit when their `package.json` versions are already correct.
+
+## Publishing after release
+
+Publishing verifies the matching package release tag by default. The expected tag is `<package-directory>@<package.json.version>`, regardless of whether the package was selected by name, directory name, or path.
+
+A real publish fails when that tag is missing or points to a commit other than `HEAD`. If the tag matches and the registry version is missing, the package is published. If the registry already contains the version, publishing skips that destination as already published.
+
+Use `--no-verify-git-tag` only when intentionally publishing without this release-tag guardrail.
+
+## Canonical release identity
+
+Drafting, releasing, and publishing use the same release identity:
+
+```text
+Git tag:                <package-directory>@<version>
+GitHub Release name:    <package-name> v<version>
+```
+
+For example:
+
+```text
+Package:        @moyarich/auto-glow-md
+Directory:      packages/moyarich-auto-glow-md
+Version:        0.1.0
+Git tag:        packages/moyarich-auto-glow-md@0.1.0
+Release name:   @moyarich/auto-glow-md v0.1.0
+```
+
+Use `workspace-release-identity` when another tool or workflow needs these values.
+
+A release-only workflow run creates and pushes the canonical Git tag but intentionally leaves the matching GitHub Release as a draft. Package publication promotes that same draft only after publication completes. If npm publication is staged and still awaiting completion, the GitHub Release remains a draft.
