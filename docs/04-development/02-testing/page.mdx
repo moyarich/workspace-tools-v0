@@ -26,7 +26,7 @@ The test suite covers workspace discovery, dependency checking, package-lock beh
 Verify the exact files that would be published:
 
 ```sh
-npm pack --dry-run
+npm pack --workspace @moyarich/workspace-tools --dry-run
 ```
 
 The `prepack` lifecycle runs `vite build` before packing. A packaging contract test verifies every `package.json#bin` target resolves inside `dist/*` and exists after the build.
