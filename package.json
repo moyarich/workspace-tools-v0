@@ -50,5 +50,12 @@
   "homepage": "https://github.com/moyarich/workspace-tools",
   "bugs": {
     "url": "https://github.com/moyarich/workspace-tools/issues"
-  }
+  },
+  "keywords": [
+    "workspace",
+    "monorepo",
+    "release",
+    "publish",
+    "cli"
+  ]
 }
